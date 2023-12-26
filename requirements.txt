@@ -6,7 +6,7 @@ accelerate
 tiktoken~=0.5.2
 einops
 transformers_stream_generator==0.0.4
-scipy~=1.11.4
+scipy
 requests~=2.31.0
 tqdm~=4.66.1
 torch~=2.1.2
