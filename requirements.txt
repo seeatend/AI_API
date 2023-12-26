@@ -1,0 +1,13 @@
+flask_restful
+flask~=3.0.0
+flask_cors
+transformers==4.32.0
+accelerate
+tiktoken~=0.5.2
+einops
+transformers_stream_generator==0.0.4
+scipy~=1.11.4
+requests~=2.31.0
+tqdm~=4.66.1
+torch~=2.1.2
+modelscope
