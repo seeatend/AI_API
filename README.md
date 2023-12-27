@@ -22,11 +22,24 @@ cd venv/Scripts
 source activate
 ```
 
-Install all project dependencies using:
+### Install dependencies
 
+#### dependencies for SadTalker:
+```
+pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
+
+sudo apt update && sudo apt upgrade
+sudo apt install ffmpeg
+```
+
+#### dependencies for Flask:
 ```
 $ pip3 install Flask
 $ pip3 install -r requirements.txt
+```
+### Download Models for SadTalker
+```
+bash app/sadtalker/scripts/download_models.sh
 ```
 
 ### Running
@@ -52,7 +65,7 @@ If you enable debug support the server will reload itself on code changes, and i
 If you have the debugger disabled or trust the users on your network, you can make the server publicly available simply by adding --host=0.0.0.0 to the command line:
 
 ```
-flask run --host=0.0.0.0
+flask run --host=0.0.0.0 --port=4000 --debug
 ```
 
 ## Contributing

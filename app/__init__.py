@@ -21,9 +21,9 @@ api.init_app(app)
 # @app.route('/image/<string:key>/<path:filename>')
 # def image_static(key, filename):
 #     root_dir = os.path.dirname(os.getcwd())
-#     src = os.path.join('ChatGPT_APIs/' + app.config['IMAGES_UPLOAD_FOLDER'] + '/' + key)
+#     sadtalker = os.path.join('ChatGPT_APIs/' + app.config['IMAGES_UPLOAD_FOLDER'] + '/' + key)
 #     try:
-#         return send_from_directory(os.path.join(root_dir, src), filename)
+#         return send_from_directory(os.path.join(root_dir, sadtalker), filename)
 #     except FileNotFoundError:
 #         abort(404)
 
