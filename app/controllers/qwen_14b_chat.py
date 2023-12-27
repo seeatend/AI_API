@@ -19,7 +19,8 @@ class QWEN14BCHAT(Resource):
             trust_remote_code=True
         ).eval()
 
-        response, history = model.chat(tokenizer, 'aaaa', history=None)
+        response, history = model.chat(tokenizer, question, history=None)
         print(response)
+        print('history = ', history)
 
         return jsonify({'answer': response})
