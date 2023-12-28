@@ -1,14 +1,14 @@
 from flask import jsonify
 from flask_restful import Resource
-from transformers import AutoModelForCausalLM, AutoTokenizer
-# from modelscope import AutoModelForCausalLM as MAutoModelForCausalLM, AutoTokenizer as MAutoTokenizer
+# from transformers import AutoModelForCausalLM, AutoTokenizer
+from modelscope import AutoModelForCausalLM, AutoTokenizer
 # from modelscope import GenerationConfig
 from flask import jsonify, request
 
 DEFAULT_CKPT_PATH = 'Qwen/Qwen-7B-Chat'
 
 
-class QWEN14BCHAT(Resource):
+class Qwen7bChat(Resource):
     def post(self):
         req = request.get_json()
         question = req['question']
