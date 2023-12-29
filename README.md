@@ -34,28 +34,34 @@ sudo apt install ffmpeg
 
 #### dependencies for Flask:
 ```
-$ pip3 install Flask
-$ pip3 install -r requirements.txt
+pip3 install Flask
+pip3 install -r requirements.txt
 ```
 ### Download Models for SadTalker
 ```
 bash app/sadtalker/scripts/download_models.sh
+```
+### Create following folders to generate video
+```
+mkdir images
+mkdir audios
+mkdir videos
 ```
 
 ### Running
 
 For Linux and Mac:
 ```
-$ export FLASK_APP=app.py
-$ export FLASK_ENV=development
-$ python3 -m flask run
+export FLASK_APP=app.py
+export FLASK_ENV=development
+python3 -m flask run
 ```
 
 For Windows:
 ```
-$ set FLASK_APP=app.py
-$ set FLASK_ENV=development
-$ python3 -m flask run
+set FLASK_APP=app.py
+set FLASK_ENV=development
+python3 -m flask run
 ```
 
 This launches a very simple builtin server, which is good enough for testing but probably not what you want to use in production.
