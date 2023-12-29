@@ -1,7 +1,7 @@
 import logging
 import os
 
-from flask import Flask
+from flask import Flask, send_from_directory, abort
 from flask_cors import CORS
 from app import main
 from app.main.api import api
@@ -18,14 +18,14 @@ console = logging.getLogger('console')
 # Flask API Initialization
 api.init_app(app)
 
-# @app.route('/image/<string:key>/<path:filename>')
-# def image_static(key, filename):
-#     root_dir = os.path.dirname(os.getcwd())
-#     sadtalker = os.path.join('ChatGPT_APIs/' + app.config['IMAGES_UPLOAD_FOLDER'] + '/' + key)
-#     try:
-#         return send_from_directory(os.path.join(root_dir, sadtalker), filename)
-#     except FileNotFoundError:
-#         abort(404)
+@app.route('/videos/<string:key>/<path:filename>')
+def video_static(key, filename):
+    root_dir = os.path.dirname(os.getcwd())
+    sadtalker = os.path.join('AI_API/' + app.config['VIDEOS_FOLDER'] + '/' + key)
+    try:
+        return send_from_directory(os.path.join(root_dir, sadtalker), filename)
+    except FileNotFoundError:
+        abort(404)
 
 
 if __name__ == '__main__':

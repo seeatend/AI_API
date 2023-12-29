@@ -1,6 +1,7 @@
 flask_restful
 flask~=3.0.0
 flask_cors
+python-dotenv
 transformers==4.32.0
 accelerate
 tiktoken~=0.5.2

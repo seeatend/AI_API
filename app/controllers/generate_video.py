@@ -1,5 +1,5 @@
-from flask_restful import Resource
-from flask import jsonify, request
+from flask_restful import Resource, abort
+from flask import jsonify, request, current_app as app
 
 from glob import glob
 import shutil
@@ -8,6 +8,8 @@ from time import strftime
 import os, sys, time
 from argparse import ArgumentParser
 
+from app.vallex.generate import audio_generate
+
 from app.sadtalker.utils.preprocess import CropAndExtract
 from app.sadtalker.test_audio2coeff import Audio2Coeff
 from app.sadtalker.facerender.animate import AnimateFromCoeff
@@ -15,18 +17,64 @@ from app.sadtalker.generate_batch import get_data
 from app.sadtalker.generate_facerender_batch import get_facerender_data
 from app.sadtalker.utils.init_path import init_path
 
+# import subprocess
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+
+def set_null_value(data, key):
+    return None if data.get(key) == 'null' else data.get(key, None)
+
+
+def allowed_image_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 class GenerateVideo(Resource):
     def post(self):
-        print('---')
-        # req = request.get_json()
+        print('# generating video')
+        print('form = ', request.form.to_dict())
+        print('files = ', request.files)
+        key = set_null_value(request.form, 'key')
+        text = set_null_value(request.form, 'text')
+        voice_type = set_null_value(request.form, 'voice_type')
+
+        if key is None or text is None:
+            abort(400, error_message='Some required parameters are missing')
+
+        img_dir = os.path.join(app.config['IMAGES_FOLDER'] + '/' + key)
+        if not os.path.exists(img_dir):
+            os.mkdir(img_dir)
+
+        audio_dir = os.path.join(app.config['AUDIOS_FOLDER'] + '/' + key)
+        if not os.path.exists(audio_dir):
+            os.mkdir(audio_dir)
+
+        video_dir = os.path.join(app.config['VIDEOS_FOLDER'] + '/' + key)
+        if not os.path.exists(video_dir):
+            os.mkdir(video_dir)
+        else:
+            # remove & re-create video directory to remove previous videos
+            shutil.rmtree(video_dir)
+            os.mkdir(video_dir)
+
+        image = request.files.getlist("image")
+        for file in image:
+            if not (file and allowed_image_file(file.filename)):
+                return abort(403, error_message='This file `' + file.filename + '` format is not provided.')
+            else:
+                file.save(os.path.join(img_dir, 'sadtalker.jpg'))
+
+        print(key)
+        audio_generate(text, audio_dir + '/vallex_audio.wav', voice_type)
+
         args = {
-            "driven_audio": './app/sadtalker/examples/driven_audio/bus_chinese.wav',  # path to driven audio
-            "source_image": './app/sadtalker/examples/source_image/full_body_1.png',  # path to source image
+            "driven_audio": audio_dir + '/vallex_audio.wav',  # path to driven audio
+            "source_image": img_dir + '/sadtalker.jpg',  # path to source image
             "ref_eyeblink": None,  # path to reference video providing eye blinking
             "ref_pose": None,  # path to reference video providing pose
             "checkpoint_dir": './app/sadtalker/checkpoints',  # path to output
-            "result_dir": './app/sadtalker/results',  # path to output
+            "result_dir": video_dir,  # path to output
             "pose_style": 0,  # type=int, input pose style from [0, 46]
             "batch_size": 2,  # type=int, the batch size of facerender
             "size": 256,  # type=int, the image size of the facerender
@@ -38,8 +86,8 @@ class GenerateVideo(Resource):
             "background_enhancer": None,  # type=str, background enhancer, [realesrgan]
             "cpu": None,
             "face3dvis": None,  # generate 3d face and 3d landmarks
-            "still": None,  # caniginal videos for the full body aniamtion
-            "preprocess": 'crop',
+            "still": True,  # caniginal videos for the full body aniamtion
+            "preprocess": 'full',
             # choices=['crop', 'extcrop', 'resize', 'full', 'extfull'], how to preprocess the images
             "verbose": None,  # not
             "old_version": None,  # use the pth other than safetensor version
@@ -84,7 +132,8 @@ class GenerateVideo(Resource):
         # current_root_path = os.path.split(sys.argv[0])[0]
         current_root_path = './app'
 
-        sadtalker_paths = init_path(args["checkpoint_dir"], os.path.join(current_root_path, 'sadtalker/config'), args["size"],
+        sadtalker_paths = init_path(args["checkpoint_dir"], os.path.join(current_root_path, 'sadtalker/config'),
+                                    args["size"],
                                     args["old_version"], args["preprocess"])
 
         # init model
@@ -155,3 +204,5 @@ class GenerateVideo(Resource):
         if not args["verbose"]:
             shutil.rmtree(save_dir)
         pass
+
+        return jsonify({'url': save_dir + '.mp4'})

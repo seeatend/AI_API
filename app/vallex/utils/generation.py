@@ -103,9 +103,9 @@ def generate_audio(text, prompt=None, language='auto', accent='no-accent'):
     if prompt is not None:
         prompt_path = prompt
         if not os.path.exists(prompt_path):
-            prompt_path = "./presets/" + prompt + ".npz"
+            prompt_path = "./app/vallex/presets/" + prompt + ".npz"
         if not os.path.exists(prompt_path):
-            prompt_path = "./customs/" + prompt + ".npz"
+            prompt_path = "./app/vallex/customs/" + prompt + ".npz"
         if not os.path.exists(prompt_path):
             raise ValueError(f"Cannot find prompt {prompt}")
         prompt_data = np.load(prompt_path)

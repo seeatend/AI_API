@@ -12,6 +12,7 @@ class Qwen7bChat(Resource):
     def post(self):
         req = request.get_json()
         question = req['question']
+        print('# question:', question)
         tokenizer = AutoTokenizer.from_pretrained(DEFAULT_CKPT_PATH, trust_remote_code=True)
         model = AutoModelForCausalLM.from_pretrained(
             DEFAULT_CKPT_PATH,

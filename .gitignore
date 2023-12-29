@@ -160,12 +160,12 @@ cython_debug/
 .idea/
 
 # SadTalker
-app/sadtalker/examples/*
-app/sadtalker/gfpgan/*
-app/sadtalker/checkpoints/*
-app/sadtalker/results/*
+app/sadtalker/examples
+app/sadtalker/gfpgan
+app/sadtalker/checkpoints
+app/sadtalker/results
 assets/*
-results/*
+results
 Dockerfile
 start_docker.sh
 start.sh
@@ -176,3 +176,7 @@ app/vallex/results
 
 # Mac
 .DS_Store
+
+videos
+audios
+images

@@ -45,6 +45,9 @@ class Config:
     # EMAIL_PORT = os.environ.get('EMAIL_PORT')
     # EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
     # EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+    IMAGES_FOLDER = os.environ.get("IMAGES_FOLDER")
+    AUDIOS_FOLDER = os.environ.get("AUDIOS_FOLDER")
+    VIDEOS_FOLDER = os.environ.get("VIDEOS_FOLDER")
 
 
 class DevelopmentConfig(Config):
