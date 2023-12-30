@@ -24,21 +24,18 @@ source activate
 
 ### Install dependencies
 
-#### dependencies for SadTalker:
-```
-sudo apt update && sudo apt upgrade
-sudo apt install ffmpeg
-
-pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
-```
-
 #### dependencies for Flask:
 ```
 pip install Flask
 pip install -r requirements.txt
 ```
-### Download Models for SadTalker
+#### setup for SadTalker:
 ```
+sudo apt update && sudo apt upgrade
+sudo apt install ffmpeg
+
+pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
+
 bash app/sadtalker/scripts/download_models.sh
 ```
 ### Create following folders to generate video
