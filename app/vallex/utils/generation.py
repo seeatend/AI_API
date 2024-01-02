@@ -89,7 +89,7 @@ def preload_models():
     vocos = Vocos.from_pretrained('charactr/vocos-encodec-24khz').to(device)
 
 @torch.no_grad()
-def generate_audio(text, prompt=None, language='auto', accent='no-accent'):
+def generate_audio(text, prompt=None, language='zh', accent='no-accent'):
     global model, codec, vocos, text_tokenizer, text_collater
     text = text.replace("\n", "").strip(" ")
     # detect language
@@ -152,7 +152,7 @@ def generate_audio(text, prompt=None, language='auto', accent='no-accent'):
     return samples.squeeze().cpu().numpy()
 
 @torch.no_grad()
-def generate_audio_from_long_text(text, prompt=None, language='auto', accent='no-accent', mode='sliding-window'):
+def generate_audio_from_long_text(text, prompt=None, language='auto', accent='no-accent', mode='fixed-prompt'):
     """
     For long audio generation, two modes are available.
     fixed-prompt: This mode will keep using the same prompt the user has provided, and generate audio sentence by sentence.
@@ -170,9 +170,9 @@ def generate_audio_from_long_text(text, prompt=None, language='auto', accent='no
     if prompt is not None and prompt != "":
         prompt_path = prompt
         if not os.path.exists(prompt_path):
-            prompt_path = "./presets/" + prompt + ".npz"
+            prompt_path = "./app/vallex/presets/" + prompt + ".npz"
         if not os.path.exists(prompt_path):
-            prompt_path = "./customs/" + prompt + ".npz"
+            prompt_path = "./app/vallex/customs/" + prompt + ".npz"
         if not os.path.exists(prompt_path):
             raise ValueError(f"Cannot find prompt {prompt}")
         prompt_data = np.load(prompt_path)

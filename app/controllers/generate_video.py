@@ -16,6 +16,7 @@ from app.sadtalker.facerender.animate import AnimateFromCoeff
 from app.sadtalker.generate_batch import get_data
 from app.sadtalker.generate_facerender_batch import get_facerender_data
 from app.sadtalker.utils.init_path import init_path
+import subprocess, platform
 
 # import subprocess
 
@@ -89,7 +90,7 @@ class GenerateVideo(Resource):
             "still": True,  # caniginal videos for the full body aniamtion
             "preprocess": 'full',
             # choices=['crop', 'extcrop', 'resize', 'full', 'extfull'], how to preprocess the images
-            "verbose": None,  # not
+            "verbose": True,  # not
             "old_version": None,  # use the pth other than safetensor version
 
             # net structure and parameters
@@ -197,12 +198,17 @@ class GenerateVideo(Resource):
         result = animate_from_coeff.generate(data, save_dir, pic_path, crop_info,
                                              enhancer=args["enhancer"], background_enhancer=args["background_enhancer"],
                                              preprocess=args["preprocess"], img_size=args["size"])
-
+        
         shutil.move(result, save_dir + '.mp4')
         print('The generated video is named:', save_dir + '.mp4')
+        
+        video_path = save_dir + '.mp4'
+        out_path = save_dir + '_out' + '.mp4'
+        command = f'ffmpeg -i {video_path} -c:v libx264 -crf 17 -vf "scale=1280:720" -c:a copy {out_path}'
+        subprocess.call(command, shell=platform.system() != 'Windows')
 
         if not args["verbose"]:
             shutil.rmtree(save_dir)
         pass
 
-        return jsonify({'url': save_dir + '.mp4'})
+        return jsonify({'url': out_path})
